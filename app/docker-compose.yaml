@@ -1,9 +1,27 @@
 services:
+  infra-ready:
+    image: busybox:1.36
+    container_name: postiz-infra-ready
+    restart: "no"
+    command:
+      - sh
+      - -ec
+      - |
+        until nc -z postiz-postgres 5432; do echo "waiting for postiz-postgres"; sleep 2; done
+        until nc -z postiz-redis 6379; do echo "waiting for postiz-redis"; sleep 2; done
+        until nc -z temporal 7233; do echo "waiting for temporal"; sleep 2; done
+    networks:
+      - postiz-network
+      - temporal-network
+
   postiz:
     image: ghcr.io/gitroomhq/postiz-app:latest
     pull_policy: always
     container_name: postiz
     restart: always
+    depends_on:
+      infra-ready:
+        condition: service_completed_successfully
     env_file:
       - ./.env
     volumes:
