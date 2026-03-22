@@ -1,0 +1,34 @@
+services:
+  postiz:
+    image: ghcr.io/gitroomhq/postiz-app:latest
+    pull_policy: always
+    container_name: postiz
+    restart: always
+    env_file:
+      - ./.env
+    volumes:
+      - ${DATA_ROOT}/postiz/config:/config
+      - ${DATA_ROOT}/postiz/uploads:/uploads
+    ports:
+      - "${POSTIZ_PORT}:5000"
+    networks:
+      - postiz-network
+      - temporal-network
+
+  spotlight:
+    image: ghcr.io/getsentry/spotlight:latest
+    pull_policy: always
+    container_name: spotlight
+    restart: unless-stopped
+    ports:
+      - "${SPOTLIGHT_PORT}:8969"
+    networks:
+      - postiz-network
+
+networks:
+  postiz-network:
+    external: true
+    name: ${POSTIZ_SHARED_NETWORK}
+  temporal-network:
+    external: true
+    name: ${TEMPORAL_NETWORK}
