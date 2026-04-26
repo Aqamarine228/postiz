@@ -15,8 +15,9 @@ services:
       - temporal-network
 
   postiz:
-    image: ghcr.io/gitroomhq/postiz-app:latest
-    pull_policy: always
+    build:
+      context: https://github.com/Aqamarine228/postiz-app-tiktok-fix.git
+    image: postiz-app-tiktok-fix:latest
     container_name: postiz
     restart: always
     depends_on:
