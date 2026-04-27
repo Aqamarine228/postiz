@@ -17,6 +17,7 @@ services:
   postiz:
     build:
       context: https://github.com/Aqamarine228/postiz-app-tiktok-fix.git
+      dockerfile: Dockerfile.dev
     image: postiz-app-tiktok-fix:latest
     container_name: postiz
     restart: always
